@@ -2,10 +2,18 @@ import cv2
 import mediapipe as mp
 import handTrackingModule as htm
 import math
+import mouse
 
 def calculateDistance(x1, y1, x2, y2):
     dist = math.sqrt((x2-x1)**2+(y2-y1)**2)
     return dist
+
+def getMousePosition(xTip, yTip):
+    # 1365, 767
+    # 640, 480
+    xMouse = ((640-xTip) * 1365)/640
+    yMouse = (yTip * 767)/480
+    return xMouse, yMouse
 
 cap = cv2.VideoCapture(0)
 detector = htm.handDetector()
@@ -25,10 +33,12 @@ while True:
         cv2.circle(img, (xTip, yTip), 5, (255, 0, 0), cv2.FILLED)
         cv2.circle(img, (xPhal, yPhal), 5, (255, 0, 0), cv2.FILLED)
         cv2.line(img, (xTip, yTip), (xPhal, yPhal), (0, 0, 255), 1)
-        # print(xTip, yTip, xPhal, yPhal)
-        if len(lmList[Tip])!=0 and len(lmList[Phal])!=0:
+        # print(lmList[Tip])
+        if lmList[Tip] and lmList[Phal]:
+            xMouse, yMouse = getMousePosition(xTip, yTip)
+            mouse.move(xMouse, yMouse, absolute=True, duration=0.2)
             dist = calculateDistance(xTip, yTip, xPhal, yPhal)
-            print(len(dist))
+            # print(mouse.get_position())
     cv2.imshow("Image", img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

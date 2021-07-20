@@ -8,11 +8,11 @@ def calculateDistance(x1, y1, x2, y2):
     dist = math.sqrt((x2-x1)**2+(y2-y1)**2)
     return dist
 
-def getMousePosition(xTip, yTip):
+def getMousePosition(xTip, yTip, delta = 50):
     # 1365, 767
     # 640, 480
-    xMouse = ((640-xTip) * 1365)/640
-    yMouse = (yTip * 767)/480
+    xMouse = ((640-xTip-delta) * 1365)/(640-2*delta)
+    yMouse = (yTip * 767-delta)/(480-2*delta)
     return xMouse, yMouse
 
 cap = cv2.VideoCapture(0)
